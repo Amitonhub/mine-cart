@@ -16,6 +16,7 @@ register yourself as admin role
 test with search, add, edit and delete product
 
 steps to test hosted site as user
+test with search and add to cart products
 
 register yourself as user role
 test with search and add to cart (payment integration can be done in future.)
