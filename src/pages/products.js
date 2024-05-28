@@ -22,6 +22,7 @@ const Products = () => {
     image: "",
   });
   const [cartItems, setCartItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const { data: products, error, isLoading } = useGetAllProductsQuery();
   const [updateProduct] = useUpdateProductMutation();
   const [addProduct] = useAddProductMutation();
@@ -33,8 +34,13 @@ const Products = () => {
     const updatedCartItems = [...cartItems, product];
     setCartItems(updatedCartItems);
   };
-  console.log(cartItems)
+
   const totalItemsInCart = cartItems.length;
+
+  // Search functionality
+  const filteredProducts = products?.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
 
   useEffect(() => {
@@ -102,6 +108,12 @@ const Products = () => {
         flexDirection: isMobile && "column",
       }}
     >
+      <Input
+        style={{ marginBottom: "20px" }}
+        placeholder="Search for products"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
       {/* Add Product Button */}
       {Number(user?.role) === 1 ? (
         <Button
@@ -183,8 +195,9 @@ const Products = () => {
       </Modal>
 
       {/* Product Cards */}
-      <Row gutter={[16, 16]}>
-        {products.map((product, index) => (
+     {searchQuery.length > 0 ?  
+     <Row gutter={[16, 16]}>
+        {filteredProducts.map((product, index) => (
           <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
             <Card
               hoverable
@@ -220,7 +233,45 @@ const Products = () => {
             </Card>
           </Col>
         ))}
-      </Row>
+      </Row> : 
+      <Row gutter={[16, 16]}>
+      {products.map((product, index) => (
+        <Col key={index} xs={24} sm={12} md={8} lg={6} xl={4}>
+          <Card
+            hoverable
+            style={{ width: !isMobile && 200 }}
+            cover={
+              <img alt={product.name} src={product?.image || dummyProduct} />
+            }
+          >
+            <Card.Meta
+              style={{ margin: 0, marginTop: 10 }}
+              title={product.name}
+              description={`Price: ${product.price}`}
+            />
+            {Number(user?.role) === 1 ? (
+              <Button
+                type="primary"
+                style={{ backgroundColor: "#8251FE", marginTop: "10px" }}
+                onClick={() => handleEditProduct(product)}
+              >
+                Edit
+              </Button>
+            ) : (
+              <Button
+                type="primary"
+                style={{ backgroundColor: "#8251FE", marginTop: "10px" }}
+                onClick={() => handleAddToCart(product)}
+              >
+                Add to cart
+              </Button>
+            )}
+            {Number(user?.role) === 1 &&
+            <DeleteOutlined style={{marginLeft: 25}} name="delete" onClick={(() => {handleDeleteProduct(product._id)})}/>}
+          </Card>
+        </Col>
+      ))}
+    </Row>}
     </div>
   );
 };
