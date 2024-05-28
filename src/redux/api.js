@@ -54,6 +54,14 @@ export const api = createApi({
       }),
       invalidatesTags: [{ type: 'Products', id: 'LIST' }]
     }),
+    deleteProduct: builder.mutation({
+      query: (productId) => ({
+        url: '/delete-product',
+        method: 'POST',
+        body: productId,
+      }),
+      invalidatesTags: [{ type: 'Products', id: 'LIST' }]
+    }),
     getAllProducts: builder.query({
       query: () => ({
         url: '/all-products',
@@ -64,4 +72,4 @@ export const api = createApi({
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useGetUserDetailsQuery, useAddProductMutation, useUpdateProductMutation, useGetAllProductsQuery } = api;
+export const { useRegisterMutation, useLoginMutation, useGetUserDetailsQuery, useAddProductMutation,useDeleteProductMutation, useUpdateProductMutation, useGetAllProductsQuery } = api;

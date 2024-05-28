@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Button, Row, Col, Modal, Input, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
 import {
   useAddProductMutation,
+  useDeleteProductMutation,
   useGetAllProductsQuery,
   useUpdateProductMutation,
 } from "../redux/api";
 import dummyProduct from "../assets/dummy-product.png";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
+  const navigate = useNavigate()
   const [modal2Open, setModal2Open] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [updatedProduct, setUpdatedProduct] = useState({
@@ -22,6 +25,7 @@ const Products = () => {
   const { data: products, error, isLoading } = useGetAllProductsQuery();
   const [updateProduct] = useUpdateProductMutation();
   const [addProduct] = useAddProductMutation();
+  const [deleteProduct] = useDeleteProductMutation();
   const user = useSelector((state) => state.login.user);
   const isMobile = window.innerWidth < 767;
 
@@ -33,10 +37,29 @@ const Products = () => {
   const totalItemsInCart = cartItems.length;
 
 
+  useEffect(() => {
+    if(!user){
+      navigate('/login')
+    }else{
+      navigate('/products')
+    }
+  },[user])
+
   const handleAddProduct = async () => {
     try {
       await addProduct(updatedProduct).unwrap();
       setModal2Open(false);
+      toast.success('product added successfully!')
+    } catch (err) {
+      // handle error, e.g., show an error message
+    }
+  };
+
+  const handleDeleteProduct = async (id) => {
+    try {
+      await deleteProduct({productId: id}).unwrap();
+      setModal2Open(false);
+      toast.success('product deleted successfully!')
     } catch (err) {
       // handle error, e.g., show an error message
     }
@@ -102,7 +125,7 @@ const Products = () => {
             float: !isMobile && "right",
             marginBottom: "20px",
           }}
-          onClick={() => {}}
+          onClick={() => {toast.warn('Payment Integration needed!')}}
         >
           Cart ({totalItemsInCart})
         </Button>
@@ -192,6 +215,8 @@ const Products = () => {
                   Add to cart
                 </Button>
               )}
+              {Number(user?.role) === 1 &&
+              <DeleteOutlined style={{marginLeft: 25}} name="delete" onClick={(() => {handleDeleteProduct(product._id)})}/>}
             </Card>
           </Col>
         ))}
