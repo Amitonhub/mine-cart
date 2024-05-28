@@ -1,0 +1,25 @@
+.menuItem {
+    background: transparent;
+    border: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    transition: background-color 0.3s;
+    border-radius: 20px;
+    /* background-color: #7d54f3;
+    color: white; */
+  }
+  
+  .menuItem:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .menuItem span {
+    margin-left: 8px;
+  }
+
+  .auth {
+    font-size: xx-large;
+    font-weight: 900;
+  }

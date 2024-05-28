@@ -1,0 +1,21 @@
+/* auth.module.css */
+.formContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  
+  .button {
+    width: 100%;
+    margin-top: 10px;
+    background-color: #8251FE;
+  }
+
+  .heading {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
